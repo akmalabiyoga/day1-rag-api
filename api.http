@@ -1,0 +1,63 @@
+# cv_1_DevOps_Engineer.pdf 
+# cv_2_Senior_DevOps_Engineer.pdf 
+# cv_3_Engineering_Manager.pdf 
+# cv_4_Senior_Data_Engineer.pdf 
+# cv_5_Senior_Frontend_Engineer.pdf 
+# cv_6_Data_Engineer.pdf 
+# cv_7_Frontend_Engineer.pdf 
+# cv_8_Junior_Backend_Engineer.pdf 
+# cv_9_Data_Engineer.pdf 
+# cv_10_Senior_Frontend_Engineer.pdf 
+# cv_11_Senior_Data_Engineer.pdf 
+# cv_12_DevOps_Engineer.pdf 
+# cv_13_Frontend_Engineer.pdf 
+# cv_14_DevOps_Engineer.pdf 
+# cv_15_Data_Engineer.pdf 
+# cv_16_Senior_Data_Engineer.pdf 
+# cv_17_Senior_Data_Engineer.pdf 
+# cv_18_Junior_Backend_Engineer.pdf 
+# cv_19_Senior_Frontend_Engineer.pdf 
+# cv_20_Junior_Backend_Engineer.pdf 
+# cv_21_Senior_Backend_Engineer.pdf 
+# cv_22_Frontend_Engineer.pdf 
+# cv_23_Junior_Backend_Engineer.pdf 
+# cv_24_Data_Engineer.pdf 
+# cv_25_Data_Engineer.pdf 
+# cv_26_Frontend_Engineer.pdf 
+# cv_27_Frontend_Engineer.pdf 
+# cv_28_Frontend_Engineer.pdf 
+# cv_29_Frontend_Engineer.pdf 
+# cv_30_Junior_Backend_Engineer.pdf
+
+@host = http://localhost:3000
+@cvFolder = /home/dedoyxp/kode/cv_test
+@cvFile = cv_16_Senior_Data_Engineer.pdf
+@cvFilePath = {{cvFolder}}/{{cvFile}}
+
+### Health-style check using existing search endpoint
+POST {{host}}/api/cv/search
+Content-Type: application/json
+
+{
+	"query": "data engineering",
+	"threshold": 1.0
+}
+
+### Ask question from stored CV chunks
+POST {{host}}/api/cv/ask
+Content-Type: application/json
+
+{
+	"question": "What are this candidate's strongest technical skills?"
+}
+
+### Upload PDF CV (update file path first)
+POST {{host}}/api/cv/upload
+Content-Type: multipart/form-data; boundary=boundary
+
+--boundary
+Content-Disposition: form-data; name="cv"; filename="{{cvFile}}"
+Content-Type: application/pdf
+
+< {{cvFilePath}}
+--boundary--

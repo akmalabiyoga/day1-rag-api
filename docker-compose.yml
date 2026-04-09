@@ -1,6 +1,26 @@
 services:
+  app:
+    image: node:lts
+    container_name: day1-rag-api
+    working_dir: /usr/src/app
+    stdin_open: true
+    tty: true
+    depends_on:
+      db:
+        condition: service_healthy
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@db:5432/graphrag_training
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/usr/src/app
+      - node_modules:/usr/src/app/node_modules
+    command: sh -c "npm ci && tail -f /dev/null"
+
   db:
-    image: pgvector/pgvector:pg15
+    image: pgvector/pgvector:pg18
     container_name: pgvector-db
     ports:
       - "5432:5432"
@@ -8,8 +28,14 @@ services:
       POSTGRES_DB: graphrag_training
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d graphrag_training"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - pgdata:/var/lib/postgresql
 
 volumes:
   pgdata:
+  node_modules:
